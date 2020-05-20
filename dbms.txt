@@ -1,0 +1,552 @@
+<head>
+
+
+<title>WELCOME TO RAILWAY RESERVATION DATABASE SYSTEM</title>
+
+<body>
+
+<h1>
+<center>WELCOME TO RAILWAY RESERVATION DATABASE SYSTEM</center></h1>
+
+</body>
+
+
+<link rel="stylesheet" type="text/css" href="style1.css">
+
+</head>
+
+<div align="right">
+
+<form action="USER.html">
+
+<div class="input-group">
+<center>
+<input type="submit" value="USER">
+</div>
+
+</form>
+
+</div>
+
+<br>
+<div>
+
+<form action="TRAIN.html" method="POST">
+<center>
+<div class="input-group">
+<center>
+<input type="submit" value="TRAIN">
+</center>
+</div>
+
+</form>
+
+<br>
+
+</div>
+
+<div>
+
+<form action="STATION.html" method="POST">
+
+<div class="input-group">
+<center>
+<input type="submit" value="STATION">
+</center>
+</div>
+
+</form>
+
+</div>
+
+<br>
+
+<div>
+
+<form action="PASSENGER.html" method="POST">
+<center><div class="input-group">
+<center>
+<input type="submit" value="PASSENGER">
+</center>
+</div>
+
+</form>
+
+</div>
+
+<br>
+
+<div>
+
+<form action="TRAIN_STATUS.html" method="POST">
+<center><div class="input-group">
+<center>
+<input type="submit" value="TRAIN_STATUS">
+</center>
+</div>
+
+</form>
+
+</div>
+
+<br>
+
+<div>
+
+<form action="RESERVATION.html" method="POST">
+<center><div class="input-group">
+<center>
+<input type="submit" value="RESERVATION">
+</center>
+</div>
+    <br>
+    <div>
+
+<form action="VIEWUSER.PHP" method="POST">
+<center><div class="input-group">
+<center>
+<input type="submit" value="VIEW DETAILS">
+</center>
+</div>
+
+
+</form>
+
+</div>
+
+<br>
+<a href="proc.php">Procedure Example</a>
+
+
+
+<a href="index.php?logout='1'" style="color: red;">logout</a> 
+</div>
+</body>
+</html>
+
+
+
+<?php 
+	session_start(); 
+
+	if (!isset($_SESSION['username'])) {
+		$_SESSION['msg'] = "You must log in first";
+		header('location: login.php');
+	}
+
+	if (isset($_GET['logout'])) {
+		session_destroy();
+		unset($_SESSION['username']);
+		header("location: login.php");
+	}
+
+?>
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Home</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+	<div class="header">
+		<h2>Home Page</h2>
+	</div>
+	<div class="content">
+
+		<!-- notification message -->
+		<?php if (isset($_SESSION['success'])) : ?>
+			<div class="error success" >
+				<h3>
+					<?php 
+						echo $_SESSION['success']; 
+						unset($_SESSION['success']);
+					?>
+				</h3>
+			</div>
+		<?php endif ?>
+
+		<!-- logged in user information -->
+		<?php  if (isset($_SESSION['username'])) : ?>
+			<p>Welcome <strong><?php echo $_SESSION['username']; ?></strong></p>
+<a href="hompg.html"> HOME PAGE</a><br>
+<a href="viewres.php">Reservation Details</a>
+			<p> <a href="index.php?logout='1'" style="color: red;">logout</a> </p>
+		<?php endif ?>
+	</div>
+     <div>
+
+<form action="viewres.PHP" method="POST">
+<center><div class="input-group">
+<center>
+<input type="submit" value="VIEW DETAILS">
+</center>
+</div>
+
+
+</form>
+
+</div>
+		
+</body>
+</html>
+
+<?PHP
+	
+					define('DB_HOST','localhost');
+define('DB_USER','root');
+define('DB_PASS','');
+define('DB_NAME','railway');
+// Establish database connection.
+try
+{
+$dbh = new PDO("mysql:host=".DB_HOST.";dbname=".DB_NAME,DB_USER, DB_PASS,array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
+}
+catch (PDOException $e)
+{
+exit("Error: " . $e->getMessage());
+}
+		$PNR=$_POST['PNR'];
+		$PASSENGER_NAME=$_POST['PASSENGER_NAME'];
+		$AGE=$_POST['AGE'];
+		$GENDER=$_POST['GENDER'];
+		$SOURCEID=$_POST['SOURCE_ID'];
+		$DESTID=$_POST['DEST_ID'];
+		$RESERVATION_STATUS=$_POST['RESERVATION_STATUS'];
+		
+		
+			
+		
+		$sql="INSERT INTO  passenger(PNR,PASSENGER_NAME,AGE,GENDER,SOURCE_ID,DEST_ID,RESERVATION_STATUS) VALUES(:PNR,:PASSENGER_NAME,:AGE,:GENDER,:SOURCEID,:DESTID,:RESERVATION_STATUS)";
+$query = $dbh->prepare($sql);
+$query->bindParam(':PNR',$PNR,PDO::PARAM_STR);
+$query->bindParam(':PASSENGER_NAME',$PASSENGER_NAME,PDO::PARAM_STR);
+$query->bindParam(':AGE',$AGE,PDO::PARAM_STR);
+$query->bindParam(':GENDER',$GENDER,PDO::PARAM_STR);
+$query->bindParam(':SOURCEID',$SOURCEID,PDO::PARAM_STR);
+$query->bindParam(':DESTID',$DESTID,PDO::PARAM_STR);
+$query->bindParam(':RESERVATION_STATUS',$RESERVATION_STATUS,PDO::PARAM_STR);
+$query->execute();
+		
+		
+	 header("refresh:2;url=hompg.html"); 
+	 
+?>
+
+-- phpMyAdmin SQL Dump
+-- version 4.7.7
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1
+-- Generation Time: Dec 07, 2018 at 11:36 AM
+-- Server version: 10.1.30-MariaDB
+-- PHP Version: 7.2.2
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `railway`
+--
+
+DELIMITER $$
+--
+-- Procedures
+--
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Get_All_Trains` ()  READS SQL DATA
+BEGIN
+SELECT * FROM train;
+END$$
+
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `passenger`
+--
+
+CREATE TABLE `passenger` (
+  `PNR` varchar(20) NOT NULL,
+  `PASSENGER_NAME` varchar(20) DEFAULT NULL,
+  `AGE` int(11) DEFAULT NULL,
+  `GENDER` varchar(20) DEFAULT NULL,
+  `SOURCE_ID` varchar(10) DEFAULT NULL,
+  `DEST_ID` varchar(20) DEFAULT NULL,
+  `RESERVATION_STATUS` varchar(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `passenger`
+--
+
+INSERT INTO `passenger` (`PNR`, `PASSENGER_NAME`, `AGE`, `GENDER`, `SOURCE_ID`, `DEST_ID`, `RESERVATION_STATUS`) VALUES
+('', '', 0, '', '', '', ''),
+('P1', 'SHYAM', 22, 'M', '2', '2', 'kundapura'),
+('P2', 'PEEYA', 25, 'F', '3', '4', 'karwar'),
+('P3', 'RIYA', 56, 'F', '2', '2', 'chennai');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `reservation`
+--
+
+CREATE TABLE `reservation` (
+  `EMAIL_ID` varchar(20) NOT NULL,
+  `PNR` varchar(20) NOT NULL,
+  `TRAIN_ID` varchar(20) NOT NULL,
+  `AVAILABLE_DATE` date DEFAULT NULL,
+  `RESERVED_STATUS` varchar(20) DEFAULT NULL,
+  `RESERVATION_DATE` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `reservation`
+--
+
+INSERT INTO `reservation` (`EMAIL_ID`, `PNR`, `TRAIN_ID`, `AVAILABLE_DATE`, `RESERVED_STATUS`, `RESERVATION_DATE`) VALUES
+('ashi@gmail.com', 'P1', 'T1', '0000-00-00', 'AV', '0000-00-00'),
+('nagendraprasad7662@g', 'P1', 'T3', '0000-00-00', 'AV', '0000-00-00'),
+('tanny17@gmail.com', 'P3', 'T4', '0000-00-00', 'AV', '0000-00-00');
+
+--
+-- Triggers `reservation`
+--
+DELIMITER $$
+CREATE TRIGGER `after_insert_res` AFTER INSERT ON `reservation` FOR EACH ROW BEGIN
+INSERT INTO reservation_bckp VALUES(NEW.EMAIL_ID,NEW.PNR,NEW.TRAIN_ID,NEW.AVAILABLE_DATE,NEW.RESERVED_STATUS,NEW.RESERVATION_DATE);
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `reservation_bckp`
+--
+
+CREATE TABLE `reservation_bckp` (
+  `EMAIL_ID` varchar(20) NOT NULL,
+  `PNR` varchar(20) NOT NULL,
+  `TRAIN_ID` varchar(20) NOT NULL,
+  `AVAILABLE_DATE` date DEFAULT NULL,
+  `RESERVED_STATUS` varchar(20) DEFAULT NULL,
+  `RESERVATION_DATE` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `reservation_bckp`
+--
+
+INSERT INTO `reservation_bckp` (`EMAIL_ID`, `PNR`, `TRAIN_ID`, `AVAILABLE_DATE`, `RESERVED_STATUS`, `RESERVATION_DATE`) VALUES
+('ashi@gmail.com', 'P1', 'T1', '0000-00-00', 'AV', '0000-00-00'),
+('nagendraprasad7662@g', 'P1', 'T3', '0000-00-00', 'AV', '0000-00-00'),
+('tanny17@gmail.com', 'P3', 'T4', '0000-00-00', 'AV', '0000-00-00');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `route`
+--
+
+CREATE TABLE `route` (
+  `TRAIN_ID` varchar(20) NOT NULL,
+  `SOURCE_DIST` int(11) NOT NULL,
+  `ARRIVAL_TIME` int(11) DEFAULT NULL,
+  `DEPARTURE_TIME` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `station`
+--
+
+CREATE TABLE `station` (
+  `STATION_ID` varchar(20) NOT NULL,
+  `STATION_NAME` varchar(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `station`
+--
+
+INSERT INTO `station` (`STATION_ID`, `STATION_NAME`) VALUES
+('', ''),
+('S10', 'KUNDAPURA'),
+('S20', 'KARWAR'),
+('S30', 'CHENNAI');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `train`
+--
+
+CREATE TABLE `train` (
+  `TRAIN_ID` varchar(20) NOT NULL,
+  `TRAIN_NAME` varchar(20) DEFAULT NULL,
+  `TRAIN_TYPE` varchar(20) DEFAULT NULL,
+  `AVAILABLE_DAYS` int(11) DEFAULT NULL,
+  `SOURCE_ID` varchar(10) DEFAULT NULL,
+  `DEST_ID` varchar(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `train`
+--
+
+INSERT INTO `train` (`TRAIN_ID`, `TRAIN_NAME`, `TRAIN_TYPE`, `AVAILABLE_DAYS`, `SOURCE_ID`, `DEST_ID`) VALUES
+('T1', 'rajdhani express', 'NON AC', 3, '2', '2'),
+('T2', 'gangothri express', 'AC', 2, '1', '4'),
+('T3', 'kasturba express', 'AC', 1, '2', '3');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `train_status`
+--
+
+CREATE TABLE `train_status` (
+  `TRAIN_ID` varchar(20) NOT NULL,
+  `AVAILABLE_DATE` date NOT NULL,
+  `BOOKED_STATUS` varchar(20) DEFAULT NULL,
+  `WAITING_SEATS` int(11) DEFAULT NULL,
+  `AVAILABLE_SEATS` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user`
+--
+
+CREATE TABLE `user` (
+  `EMAIL_ID` varchar(10) NOT NULL,
+  `NAME` varchar(20) DEFAULT NULL,
+  `PASSWORD` varchar(20) DEFAULT NULL,
+  `AGE` int(11) DEFAULT NULL,
+  `GENDER` varchar(20) DEFAULT NULL,
+  `PHNO` bigint(20) DEFAULT NULL,
+  `CITY` varchar(20) DEFAULT NULL,
+  `STATE` varchar(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `user`
+--
+
+INSERT INTO `user` (`EMAIL_ID`, `NAME`, `PASSWORD`, `AGE`, `GENDER`, `PHNO`, `CITY`, `STATE`) VALUES
+('ashi@gmail', 'ashritha', '3456', 22, 'f', 9844512321, 'udupi', 'karantaka'),
+('nagendrapr', 'nagendra', '1234', 21, 'm', 9482465768, 'udupi', 'karantaka'),
+('ram27@gmai', 'ram', '1234', 34, 'm', 7996807317, 'udupi', 'karantaka'),
+('tanu12@gma', 'tanaz', '6789', 22, 'f', 8971622321, 'karwar', 'karantaka');
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `passenger`
+--
+ALTER TABLE `passenger`
+  ADD PRIMARY KEY (`PNR`);
+
+--
+-- Indexes for table `reservation`
+--
+ALTER TABLE `reservation`
+  ADD PRIMARY KEY (`EMAIL_ID`,`PNR`,`TRAIN_ID`),
+  ADD KEY `TRAIN_ID` (`TRAIN_ID`),
+  ADD KEY `PNR` (`PNR`);
+
+--
+-- Indexes for table `reservation_bckp`
+--
+ALTER TABLE `reservation_bckp`
+  ADD PRIMARY KEY (`EMAIL_ID`,`PNR`,`TRAIN_ID`),
+  ADD KEY `TRAIN_ID` (`TRAIN_ID`),
+  ADD KEY `PNR` (`PNR`);
+
+--
+-- Indexes for table `route`
+--
+ALTER TABLE `route`
+  ADD PRIMARY KEY (`TRAIN_ID`,`SOURCE_DIST`);
+
+--
+-- Indexes for table `station`
+--
+ALTER TABLE `station`
+  ADD PRIMARY KEY (`STATION_ID`);
+
+--
+-- Indexes for table `train`
+--
+ALTER TABLE `train`
+  ADD PRIMARY KEY (`TRAIN_ID`);
+
+--
+-- Indexes for table `train_status`
+--
+ALTER TABLE `train_status`
+  ADD PRIMARY KEY (`TRAIN_ID`,`AVAILABLE_DATE`);
+
+--
+-- Indexes for table `user`
+--
+ALTER TABLE `user`
+  ADD PRIMARY KEY (`EMAIL_ID`);
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+
+<?PHP
+	
+								define('DB_HOST','localhost');
+define('DB_USER','root');
+define('DB_PASS','');
+define('DB_NAME','railway');
+// Establish database connection.
+try
+{
+$dbh = new PDO("mysql:host=".DB_HOST.";dbname=".DB_NAME,DB_USER, DB_PASS,array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
+}
+catch (PDOException $e)
+{
+exit("Error: " . $e->getMessage());
+}
+	
+		$EMAILID=$_POST['EMAIL_ID'];
+		$PNR=$_POST['PNR'];
+		$TRAINID=$_POST['TRAIN_ID'];
+		$AVAILABLEDATE=$_POST['AVAILABLE_DATE'];
+		$RESERVEDSTATUS=$_POST['RESERVED_STATUS'];
+		$RESERVATIONDATE=$_POST['RESERVATION_DATE'];
+		
+		
+		
+		$sql="INSERT INTO reservation(EMAIL_ID,PNR,TRAIN_ID,AVAILABLE_DATE,RESERVED_STATUS,RESERVATION_DATE) values(:EMAILID,:PNR,:TRAINID,:AVAILABLEDATE,:RESERVEDSTATUS,:RESERVATIONDATE)";
+		
+		$query = $dbh->prepare($sql);
+$query->bindParam(':EMAILID',$EMAILID,PDO::PARAM_STR);
+$query->bindParam(':PNR',$PNR,PDO::PARAM_STR);
+$query->bindParam(':TRAINID',$TRAINID,PDO::PARAM_STR);
+$query->bindParam(':AVAILABLEDATE',$AVAILABLEDATE,PDO::PARAM_STR);
+$query->bindParam(':RESERVEDSTATUS',$RESERVEDSTATUS,PDO::PARAM_STR);
+$query->bindParam(':RESERVATIONDATE',$RESERVATIONDATE,PDO::PARAM_STR);
+$query->execute();
+	 header("refresh:2;url=reservation.html");
+	 
+?>
