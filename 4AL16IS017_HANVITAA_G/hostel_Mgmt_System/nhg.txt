@@ -1,0 +1,60 @@
+create table admin
+(
+id varchar(10) primary key,
+username varchar(10),
+email varchar(10),
+password varchar(10),
+reg_data date,
+updatation_date date
+)
+
+create table userregistration
+(
+stdid varchar(10) primary key,
+regno varchar(10),
+name  varchar(10),
+gender  varchar(1),
+contectno number(10),
+email  varchar(10),
+password  varchar(10),
+regdate date,
+updationdate date
+)
+
+
+create table course
+(
+id  varchar(10) primary key,
+course_code  varchar(10),
+course_sn  varchar(10),
+course_fn  varchar(10),
+posting_date date,
+foreign key(id) references userregister(stdid)
+)
+
+create table room
+(
+id  varchar(10) primary key,
+seater number(10),
+roomno number(10)
+fee number(10)
+stdid  varchar(10),
+posting_date date,
+foreign key(stdid) references userregister(stdid),
+foreign key(id) references admin(id)
+)
+
+create table login
+(
+stdid varchar(10) primary key,
+userid varchar(10),
+useremail varchar(10),
+userip varchar(10),
+city varchar(10),
+conuntry varchar(10),
+logintime datetime,
+foreign key(stdid) references userregister(stdid)
+)
+
+
+
